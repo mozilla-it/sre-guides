@@ -18,7 +18,6 @@ module "gke" {
   source       = "git@github.com:mozilla-it/terraform-sre-gke.git"
   cluster_name = "${var.cluster_name}"
   project_id   = "${var.project_id}"
-  creds-file   = "${var.creds-file}"
   ssh_username = "${var.ssh_username}"
   ssh_password = "${var.ssh_password}"
 }
