@@ -17,7 +17,8 @@ curl -Lf -o /usr/bin/lifecycled \
 chmod +x /usr/bin/lifecycled
 
 # Install the lifecycled systemd service
-touch /etc/lifecycled
-curl -Lf -o /etc/systemd/system/lifecycled.service \
-            https://raw.githubusercontent.com/buildkite/lifecycled/$${lifecycled_version}/init/systemd/lifecycled.unit
+# Commented out for now until we actually set this up
+#touch /etc/lifecycled
+#curl -Lf -o /etc/systemd/system/lifecycled.service \
+#            https://raw.githubusercontent.com/buildkite/lifecycled/$${lifecycled_version}/init/systemd/lifecycled.unit
 
