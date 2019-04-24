@@ -14,13 +14,6 @@ variable "creds-file" {
   default = "creds/imposing-union-227917.json"
 }
 
-variable "ssh_username" { }
-variable "ssh_password" { }
+variable "ssh_username" {}
+variable "ssh_password" {}
 
-output "gcp_cluster_endpoint" {
-    value = "${google_container_cluster.gcp_kubernetes.endpoint}"
-}
-
-output "gcp_cluster_name" {
-    value = "${google_container_cluster.gcp_kubernetes.name}"
-}
