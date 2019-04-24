@@ -12,7 +12,7 @@
   * `export GOOGLE_APPLICATION_CREDENTIALS=<path-to-your-key-json-file>`
 4. Create a bucket to store your terraform state.
 ```
-gcloud gs mb gs://afrank-tf-0
+gcloud gs mb gs://itsre-state-${accountId}
 ```
 5. Update/create a `terraform.tfvars` file and ensure the following keys are set properly:
 ```
@@ -28,3 +28,5 @@ ssh_password = <my-made-up-ssh-password>
    * terraform init
    * terraform plan
    * terraform apply
+
+Read more about terraform conventions [here](https://mana.mozilla.org/wiki/display/SRE/Terraform)
