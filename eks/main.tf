@@ -6,7 +6,7 @@
 terraform {
   backend "s3" {
     bucket = "terramoz-eks-state"
-    key = "us-east-1/afrank-0/terraform.tfstate"
+    key    = "us-east-1/afrank-0/terraform.tfstate"
   }
 }
 
@@ -26,7 +26,7 @@ locals {
       instance_type         = "m4.large"
       root_volume_size      = "100"
       subnets               = "${join(",",var.subnets)}"
-      additional_userdata   = "aws s3 cp --recursive s3://audisp-json/ /tmp && sudo rpm -i /tmp/audisp-json-2.2.2-1.amazonlinux_x86_64.rpm && sudo mv /tmp/audit.rules /etc/audit/rules.d/ && sudo service auditd restart && sudo yum install -y amazon-ssm-agent && sudo systemctl start amazon-ssm-agent"
+      additional_userdata   = "${data.template_file.additional_userdata.rendered}"
     },
     {
       name                  = "k8s-worker-blue"
@@ -40,18 +40,24 @@ locals {
       instance_type         = "m4.large"
       root_volume_size      = "100"
       subnets               = "${join(",",var.subnets)}"
-      additional_userdata   = "aws s3 cp --recursive s3://audisp-json/ /tmp && sudo rpm -i /tmp/audisp-json-2.2.2-1.amazonlinux_x86_64.rpm && sudo mv /tmp/audit.rules /etc/audit/rules.d/ && sudo service auditd restart && sudo yum install -y amazon-ssm-agent && sudo systemctl start amazon-ssm-agent"
+      additional_userdata   = "${data.template_file.additional_userdata.rendered}"
     },
   ]
 
   tags = {
+    "Region"      = "${var.region}"
     "Environment" = "${var.environment}"
+    "Terraform"   = "true"
   }
+}
+
+data "template_file" "additional_userdata" {
+  template = "${file("${path.module}/userdata/additional-userdata.sh")}"
 }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "1.7.0"
+  version = "3.0.0"
 
   cluster_name       = "${local.cluster_name}"
   cluster_version    = "${var.cluster_version}"
@@ -61,4 +67,5 @@ module "eks" {
   worker_group_count = "2"
   tags               = "${local.tags}"
   write_kubeconfig   = "true"
+  manage_aws_auth    = "true"                   # You will need aws-iam-authenticator and kubectl installed for this
 }
