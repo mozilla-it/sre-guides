@@ -7,6 +7,7 @@ terraform {
   backend "s3" {
     bucket = "terramoz-eks-state"
     key    = "us-east-1/afrank-0/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
