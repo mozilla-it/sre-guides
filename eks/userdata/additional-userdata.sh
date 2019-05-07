@@ -1,12 +1,7 @@
 #!/bin/bash
 
-audisp_version="2.2.2-1"
 lifecycled_version="v3.0.2"
 
-aws s3 cp --recursive s3://audisp-json/ /tmp
-sudo rpm -i /tmp/audisp-json-$${audisp_version}.amazonlinux_x86_64.rpm
-sudo mv /tmp/audit.rules /etc/audit/rules.d/
-sudo service auditd restart
 sudo yum install -y amazon-ssm-agent
 sudo systemctl enable amazon-ssm-agent
 sudo systemctl start amazon-ssm-agent
