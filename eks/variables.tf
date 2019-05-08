@@ -10,13 +10,10 @@ variable "cluster_version" {
   default = "1.12"
 }
 
-variable "vpc_id" {}
-
-variable "available_amis" {
-  type = "map"
+variable "lifecycled_version" {
+  default = "v3.0.2"
 }
 
-variable "subnets" {
-  type    = "list"
-  default = []
+variable "lifecycled_log_group" {
+  default = "/aws/lifecycled"
 }

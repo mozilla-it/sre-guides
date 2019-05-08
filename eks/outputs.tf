@@ -9,3 +9,7 @@ output "worker_iam_role_arn" {
 output "worker_security_group_id" {
   value = "${module.eks.worker_security_group_id}"
 }
+
+output "worker_asg_name" {
+  value = "${module.eks.workers_asg_names}"
+}

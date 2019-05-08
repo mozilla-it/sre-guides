@@ -1,0 +1,20 @@
+# Change this to properly reflect where you wan't your state file to me
+terraform {
+  backend "s3" {
+    bucket = "terramoz-eks-state"
+    key    = "us-east-1/afrank-0/terraform.tfstate"
+  }
+}
+
+# An example of a remote state that has a vpc_id
+# you can switch the location elsewhere
+data "terraform_remote_state" "deploy" {
+  backend = "s3"
+
+  config {
+    bucket = "itsre-state-517826968395"
+    key    = "terraform/deploy.tfstate"
+    region = "eu-west-1"
+  }
+}
+
