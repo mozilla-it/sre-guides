@@ -1,19 +1,47 @@
 #!/bin/bash
 
-lifecycled_version="v3.0.2"
+set -u
 
-sudo yum install -y amazon-ssm-agent
-sudo systemctl enable amazon-ssm-agent
-sudo systemctl start amazon-ssm-agent
+audisp_version="2.2.2-1"
 
-# Install the lifecycled binary
-curl -Lf -o /usr/bin/lifecycled \
-            https://github.com/buildkite/lifecycled/releases/download/$${lifecycled_version}/lifecycled-linux-amd64
-chmod +x /usr/bin/lifecycled
+install_ssm() {
+    yum install -y amazon-ssm-agent
+    systemctl start amazon-ssm-agent
+}
 
-# Install the lifecycled systemd service
-# Commented out for now until we actually set this up
-#touch /etc/lifecycled
-#curl -Lf -o /etc/systemd/system/lifecycled.service \
-#            https://raw.githubusercontent.com/buildkite/lifecycled/$${lifecycled_version}/init/systemd/lifecycled.unit
+install_audisp_json() {
+	aws s3 cp --recursive s3://audisp-json/ /tmp
+	rpm -i /tmp/audisp-json-$${audisp_version}.amazonlinux_x86_64.rpm
+	 mv /tmp/audit.rules /etc/audit/rules.d/
+	service auditd restart
+}
 
+install_lifecycled() {
+
+    echo "${cluster_name}" > /etc/eks/cluster_name
+
+    curl -Lf -o /usr/local/bin/graceful_shutdown.sh \
+                https://gist.githubusercontent.com/limed/2486e84dcbb1098981af076011cfb8db/raw/8304c3b1e2dc89ba50380a76f61bc91892759665/lifecycled_handler.sh
+    chmod +x /usr/local/bin/graceful_shutdown.sh
+
+    # Install the binary
+    curl -Lf -o /usr/bin/lifecycled \
+                https://github.com/buildkite/lifecycled/releases/download/${lifecycled_version}/lifecycled-linux-amd64
+    chmod +x /usr/bin/lifecycled
+
+    curl -Lf -o /etc/systemd/system/lifecycled.service \
+            https://gist.githubusercontent.com/limed/2486e84dcbb1098981af076011cfb8db/raw/8304c3b1e2dc89ba50380a76f61bc91892759665/lifecycled.unit
+
+    touch /etc/lifecycled
+    echo "AWS_REGION=${region}" > /etc/lifecycled
+    echo "LIFECYCLED_SNS_TOPIC=${sns_topic}" >> /etc/lifecycled
+    echo "LIFECYCLED_HANDLER=/usr/local/bin/graceful_shutdown.sh" >> /etc/lifecycled
+
+    systemctl daemon-reload
+    systemctl enable lifecycled
+    systemctl start lifecycled
+}
+
+install_ssm
+install_lifecycled
+install_audisp_json

@@ -1,0 +1,24 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node_drainer
+  rules:
+    - apiGroups: [""]
+      resources: ["pods", "pods/eviction", "nodes"]
+      verbs: ["create", "list", "patch"]
+    - apiGroups: ["extensions"]
+      resources: [ "daemonsets" ]
+      verbs: ["get"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node_drainer
+subjects:
+  - kind: Group
+    name: node_drainer
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: node_drainer
+  apiGroup: rbac.authorization.k8s.io
