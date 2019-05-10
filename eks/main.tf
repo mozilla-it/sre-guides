@@ -14,7 +14,6 @@ locals {
       spot_price            = "0.04"
       subnets               = "${join(",", data.terraform_remote_state.deploy.private_subnets)}"
       additional_userdata   = "${data.template_file.additional_userdata.rendered}"
-      kubelet_extra_args    = "--node-labels=kubernetes.io/lifecycle=spot"
     },
   ]
 
@@ -40,7 +39,7 @@ data "template_file" "additional_userdata" {
   vars = {
     lifecycled_version = "${var.lifecycled_version}"
     region             = "${var.region}"
-    sns_topic          = "${aws_sns_topic.main.arn}"
+    sns_topic          = "${module.asg_lifecycle.sns_topic_arn}"
     cluster_name       = "${module.eks.cluster_id}"
     log_group_name     = "${var.lifecycled_log_group}"
   }
@@ -50,6 +49,15 @@ data "template_file" "additional_userdata" {
 resource "aws_iam_role_policy_attachment" "ssm" {
   role       = "${module.eks.worker_iam_role_name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
+
+module "asg_lifecycle" {
+  source = "github.com/limed/terraform-modules//asg-lifecycle?ref=master"
+
+  name             = "${local.cluster_name}"
+  worker_asg       = "${module.eks.workers_asg_names}"
+  worker_asg_count = "1"                                  # This is done on purpose because terraform has issues with dynamic counts
+  worker_iam_role  = "${module.eks.worker_iam_role_name}"
 }
 
 module "eks" {
@@ -62,10 +70,10 @@ module "eks" {
   vpc_id                = "${data.terraform_remote_state.deploy.vpc_id}"
   subnets               = ["${data.terraform_remote_state.deploy.public_subnets}"]
   worker_groups         = "${local.worker_groups}"
-  worker_group_count    = "${length(worker_groups)}"
+  worker_group_count    = "1"                                                      # Yep did this on purpose
   tags                  = "${local.tags}"
   map_roles             = "${local.map_roles}"
-  map_roles_count       = "${length(local.map_roles)}"
+  map_roles_count       = "1"                                                      # Done on purpose to deal with terraform and counts
   kubeconfig_name       = "${local.cluster_name}"
   write_kubeconfig      = "false"
   write_aws_auth_config = "false"

@@ -2,18 +2,9 @@
 
 set -u
 
-audisp_version="2.2.2-1"
-
 install_ssm() {
     yum install -y amazon-ssm-agent
     systemctl start amazon-ssm-agent
-}
-
-install_audisp_json() {
-	aws s3 cp --recursive s3://audisp-json/ /tmp
-	rpm -i /tmp/audisp-json-$${audisp_version}.amazonlinux_x86_64.rpm
-	 mv /tmp/audit.rules /etc/audit/rules.d/
-	service auditd restart
 }
 
 install_lifecycled() {
@@ -44,4 +35,3 @@ install_lifecycled() {
 
 install_ssm
 install_lifecycled
-install_audisp_json
