@@ -34,4 +34,4 @@ install_lifecycled() {
 }
 
 install_ssm
-install_lifecycled
+#install_lifecycled
