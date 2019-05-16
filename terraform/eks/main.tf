@@ -34,14 +34,14 @@ locals {
 }
 
 data "template_file" "additional_userdata" {
-  template = "${file("${path.module}/userdata/additional-userdata.sh")}"
+  template = "${file("${path.module}/templates/userdata/additional-userdata.sh")}"
 
   vars = {
     lifecycled_version = "${var.lifecycled_version}"
     region             = "${var.region}"
     sns_topic          = "${module.asg_lifecycle.sns_topic_arn}"
     cluster_name       = "${module.eks.cluster_id}"
-    log_group_name     = "${var.lifecycled_log_group}"
+    log_group_name     = "${var.lifecycled_log_group}-${local.cluster_name}"
   }
 }
 
@@ -54,10 +54,11 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 module "asg_lifecycle" {
   source = "github.com/limed/terraform-modules//asg-lifecycle?ref=master"
 
-  name             = "${local.cluster_name}"
-  worker_asg       = "${module.eks.workers_asg_names}"
-  worker_asg_count = "1"                                  # This is done on purpose because terraform has issues with dynamic counts
-  worker_iam_role  = "${module.eks.worker_iam_role_name}"
+  name                 = "${local.cluster_name}"
+  worker_asg           = "${module.eks.workers_asg_names}"
+  worker_asg_count     = "1"                                                 # This is done on purpose because terraform has issues with dynamic counts
+  worker_iam_role      = "${module.eks.worker_iam_role_name}"
+  lifecycled_log_group = "${var.lifecycled_log_group}-${local.cluster_name}"
 }
 
 module "eks" {
