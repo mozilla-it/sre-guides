@@ -51,8 +51,8 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
 EOF
 }
 
-resource "aws_iam_role_policy" "worker-tags" {
-  name = "worker-tags-${var.environment}-${var.region}"
+resource "aws_iam_role_policy" "worker-policy" {
+  name = "worker-policy-${var.environment}-${var.region}"
   role = "${module.eks.worker_iam_role_name}"
 
   policy = <<EOF
