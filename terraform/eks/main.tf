@@ -1,5 +1,5 @@
 locals {
-  cluster_name = "k8s-${var.environment}-${var.region}"
+  cluster_name = "${var.prefix}-${var.environment}-${var.region}"
 
   worker_groups = [
     {
