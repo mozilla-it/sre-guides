@@ -9,7 +9,7 @@ locals {
       asg_force_delete      = true
       autoscaling_enabled   = true
       protect_from_scale_in = false
-      instance_type         = "m4.large"
+      instance_type         = "m5.large"
       root_volume_size      = "100"
       spot_price            = "0.04"
       subnets               = "${join(",", data.terraform_remote_state.deploy.private_subnets)}"
