@@ -1,18 +1,18 @@
 data "template_file" "node_drainer_configmap" {
-  template = "${file("${path.module}/templates/k8s/node-drainer-configmap.yaml")}"
+  template = file("${path.module}/templates/k8s/node-drainer-configmap.yaml")
 
   vars = {
-    region               = "${var.region}"
-    lifecycled_sns_topic = "${module.asg_lifecycle.sns_topic_arn}"
+    region               = var.region
+    lifecycled_sns_topic = module.asg_lifecycle.sns_topic_arn
     lifecycled_log_group = "${var.lifecycled_log_group}-${local.cluster_name}"
   }
 }
 
 resource "null_resource" "node_drainer" {
-  depends_on = ["module.asg_lifecycle"]
+  depends_on = [module.asg_lifecycle]
 
   provisioner "local-exec" {
-    working_dir = "${path.module}"
+    working_dir = path.module
 
     command = <<EOF
 for i in `seq 1 10`; do \
@@ -25,12 +25,14 @@ done; \
 rm node_drainer_configmap.yaml kube_config.yaml;
 EOF
 
+
     interpreter = ["/bin/sh", "-c"]
   }
 
-  triggers {
-    kube_config_map_rendered        = "${module.eks.kubeconfig}"
-    node_drainer_configmap_rendered = "${data.template_file.node_drainer_configmap.rendered}"
-    endpoint                        = "${module.eks.cluster_endpoint}"
+  triggers = {
+    kube_config_map_rendered        = module.eks.kubeconfig
+    node_drainer_configmap_rendered = data.template_file.node_drainer_configmap.rendered
+    endpoint                        = module.eks.cluster_endpoint
   }
 }
+

@@ -75,6 +75,7 @@ data "aws_iam_policy_document" "worker-policy-document" {
 
 resource "aws_iam_role_policy" "worker-policy" {
   name   = "worker-policy-${var.environment}-${var.region}"
-  role   = "${module.eks.worker_iam_role_name}"
-  policy = "${data.aws_iam_policy_document.worker-policy-document.json}"
+  role   = module.eks.worker_iam_role_name
+  policy = data.aws_iam_policy_document.worker-policy-document.json
 }
+

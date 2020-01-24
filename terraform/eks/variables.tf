@@ -21,3 +21,4 @@ variable "prefix" {
 variable "lifecycled_log_group" {
   default = "/aws/lifecycled"
 }
+
