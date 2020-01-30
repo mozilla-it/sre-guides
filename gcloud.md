@@ -25,4 +25,20 @@ To set the active account, run:
     $ gcloud config set account `ACCOUNT`
 ```
 
+Next you should set your project:
 
+```
+$ gcloud config set project mozilla-it-service-engineering
+Updated property [core/project].
+```
+
+And you can check your config using like this:
+```
+$ gcloud config list
+[core]
+account = afrank@gcp.infra.mozilla.com
+disable_usage_reporting = True
+project = mozilla-it-service-engineering
+
+Your active configuration is: [default]
+```
