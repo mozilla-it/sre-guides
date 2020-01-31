@@ -42,3 +42,22 @@ project = mozilla-it-service-engineering
 
 Your active configuration is: [default]
 ```
+
+## Talking to GCS
+
+In addition to gcloud the SDK also comes with gsutil, which you can use for talking to GCS, Google's version of S3. You can try it out with `gsutil ls gs://`.
+
+## Talking to a GKE cluster
+
+```
+$ gcloud container clusters list
+NAME                            LOCATION  MASTER_VERSION  MASTER_IP     MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+mozilla-it-service-engineering  us-west1  1.15.7-gke.23   34.83.210.13  n1-standard-1  1.15.7-gke.23  6          RUNNING
+```
+
+```
+$ gcloud container clusters get-credentials mozilla-it-service-engineering --region us-west1
+Fetching cluster endpoint and auth data.
+kubeconfig entry generated for mozilla-it-service-engineering.
+```
+
