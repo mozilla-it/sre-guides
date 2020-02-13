@@ -15,6 +15,8 @@ sudo apt-get update && sudo apt-get install google-cloud-sdk
 
 Or if you use a mac you can either grab the binary [here](https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-278.0.0-darwin-x86_64.tar.gz) or get the interactive installer [here](https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash)
 
+Note: Ensure you have logged into the [GCP web UI](https://sso.mozilla.com/gcp) at least once, to generate your GCP specific user in the SSO login list.
+
 Once you've got the `gcloud` binary, run `gcloud init` to initialize your environment followed by `gcloud auth login` to authenticate against GCP (requires a web browser). Make sure you're authenticating using your gcp.infra.mozilla.com account. Once you've completed these steps, you can ensure everything worked correctly:
 
 ```
