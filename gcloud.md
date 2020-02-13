@@ -1,6 +1,8 @@
 # Installing and using Gcloud for GCP management
 
-First, go here and get the version of gcloud that is appropriate for your environment: https://cloud.google.com/sdk/install
+Before you do anything, ensure you can log into google cloud using your @gcp.infra.mozilla.com address. This can be achieved by clicking the "GCP Infrastructure" link in the SSO dashboard. If you don't have this link, you won't have access, and should check to be sure you've been successfully added to the GCP Mozillians group. For the rest of this tutorial you'll be using your `<username>@gcp.infra.mozilla.com` address.
+
+Next, go here and get the version of gcloud that is appropriate for your environment: https://cloud.google.com/sdk/install
 
 For example, if you use a dpkg-based system, you can run these steps:
 
@@ -13,7 +15,7 @@ sudo apt-get update && sudo apt-get install google-cloud-sdk
 
 Or if you use a mac you can either grab the binary [here](https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-278.0.0-darwin-x86_64.tar.gz) or get the interactive installer [here](https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash)
 
-Once you've got the `gcloud` binary, run `gcloud init` to initialize your environment followed by `gcloud auth login` to authenticate against GCP (requires a web browser). Once you've completed these steps, you can ensure everything worked correctly:
+Once you've got the `gcloud` binary, run `gcloud init` to initialize your environment followed by `gcloud auth login` to authenticate against GCP (requires a web browser). Make sure you're authenticating using your gcp.infra.mozilla.com account. Once you've completed these steps, you can ensure everything worked correctly:
 
 ```
 $ gcloud auth list
