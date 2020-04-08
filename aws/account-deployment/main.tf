@@ -1,6 +1,6 @@
 # Example on how to create an account deployment with a VPC setup
 
-local {
+locals {
   account_name = "fredbob"
 
   features = {
@@ -8,15 +8,17 @@ local {
     vpc     = true
     infosec = true
     dns     = true
+    maws    = true
   }
 }
 
 module "deploy" {
   source       = "github.com/mozilla-it/itsre-deploy?ref=master"
-  account_name = "${local.account_name}"
-  features     = "${local.features}"
+  account_name = local.account_name
+  features     = local.features
 }
 
 output "vpc_id" {
-  value = "${module.deploy.vpc_id}"
+  value = module.deploy.vpc_id
 }
+

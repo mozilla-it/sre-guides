@@ -7,6 +7,8 @@ Our [account deployment](https://github.com/mozilla-it/itsre-deploy) process cre
 * Enables cloudtrail on all regions
 * Enables opsec roles
 * Sets password policy and account alias
+* Enables mozilla aws sso (MAWS)
+* Creates a set of billing policies
 
 ## Other options
 The account deployment process is also capable of creating several other items such as:
